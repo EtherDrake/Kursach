@@ -186,6 +186,8 @@ public class MainWindow extends javax.swing.JFrame {
     ArrayList<String> answersConnection;
     String answerPrint;
     
+    questionBank qb;
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -727,7 +729,29 @@ public class MainWindow extends javax.swing.JFrame {
                 } 
                 catch (FileNotFoundException e) {}
                 catch(IOException e){}  
-            }      
+            }
+
+            try
+            {
+                FileInputStream fis = new FileInputStream("questionBank.qb");
+                ObjectInputStream is = new ObjectInputStream(fis);
+                qb=(questionBank)is.readObject();
+                
+                is.close();
+                fis.close();
+                
+                for(int i=0;i<toSave.getQuestions().size();i++)qb.add(toSave.getQuestions().get(i));
+                
+                FileOutputStream fos=new FileOutputStream("questionBank.qb");
+                ObjectOutputStream oos = new ObjectOutputStream(fos);
+                oos.writeObject(qb);
+                
+                oos.close();
+                fos.close();    
+                
+            }catch(Exception ex){}
+            
+            
         }
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
