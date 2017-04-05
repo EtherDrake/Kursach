@@ -6,8 +6,10 @@
 package testeditor;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -43,6 +45,26 @@ public class StartWindow extends javax.swing.JFrame {
         jLabel2.setEnabled(false);
         jSpinner1.setEnabled(false);
         jLabel6.setVisible(false);
+
+        /*
+        //questionBank DEBUG
+        try
+        {
+            questionBank qbtest;
+            FileInputStream fis = new FileInputStream("questionBank.qb");
+            ObjectInputStream is = new ObjectInputStream(fis);
+            qbtest=(questionBank)is.readObject();
+            ArrayList<Question> arr = qbtest.getQuestions();
+            System.out.println(arr.size());
+            for(int i=0;i<arr.size();i++)System.out.println(arr.get(i).getText());
+        }catch(Exception ex)
+        {
+            if(ex.getClass()==FileNotFoundException.class)System.out.println("File Bolzhedor!");
+            else if(ex.getClass()==IOException.class)System.out.println("IO Bolzhedor!");
+            else if(ex.getClass()==ClassNotFoundException.class)System.out.println("Class Bolzhedor!");
+            else System.out.println(ex.getClass());
+        }
+        */       
     }
 
     /**
@@ -70,6 +92,7 @@ public class StartWindow extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
 
@@ -129,6 +152,14 @@ public class StartWindow extends javax.swing.JFrame {
             }
         });
         jMenu1.add(jMenuItem4);
+
+        jMenuItem1.setText("Комбіновані тести");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
 
         jMenuItem3.setText("Про програму");
         jMenu1.add(jMenuItem3);
@@ -270,6 +301,12 @@ public class StartWindow extends javax.swing.JFrame {
         server.stopServer();
     }//GEN-LAST:event_jButton4ActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        comboTestEditor form=new comboTestEditor();
+        form.show();
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -319,6 +356,7 @@ public class StartWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;

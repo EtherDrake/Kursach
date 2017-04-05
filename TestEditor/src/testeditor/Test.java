@@ -19,6 +19,7 @@ public class Test implements Serializable{
     private ArrayList<Question> Questions;
     private int Time;
     private double value;
+    private boolean training;
     
     //Конструктор
     public Test(String subj,String n,int t,ArrayList<Question> quest)
@@ -57,4 +58,6 @@ public class Test implements Serializable{
     public String getName(){return Name;}
     public int getTime(){return Time;}
     public double getValue(){return value;}
+    
+    public void setTraining(boolean t){training=t;}
 }

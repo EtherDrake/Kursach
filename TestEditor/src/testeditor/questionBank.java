@@ -77,6 +77,24 @@ public class questionBank implements Serializable
         return res;
     }
     
+    public ArrayList<String> getThemes()
+    {
+         ArrayList<String> themes=new ArrayList<>();
+         for(int i=0;i<Questions.size();i++)
+         {
+             if(themes.contains(Questions.get(i).getTheme())) continue;
+             else themes.add(Questions.get(i).getTheme());
+             
+             
+         }
+         return themes;
+    }
+    
+    public int getNumberOfQuestions(String theme)
+    {
+        return getQuestions(theme).size();
+    }
+    
     public ArrayList<Question> getQuestions(String theme)
     {
         ArrayList<Question> res=new ArrayList<>();
@@ -90,6 +108,9 @@ public class questionBank implements Serializable
       
         return res;
     }
+    
+     public ArrayList<Question> getQuestions(){return Questions;}
+             
     
 //    public boolean checkContainment(Question q)
 //    {

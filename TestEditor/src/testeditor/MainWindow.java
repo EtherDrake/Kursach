@@ -124,7 +124,7 @@ public class MainWindow extends javax.swing.JFrame {
                         Class[] types = new Class [] {java.lang.String.class, java.lang.String.class};                
                     };
                     data.setColumnCount(2);
-                    data.setColumnIdentifiers(new Object[]{"Перший стовбчик","Другий стовбчик"});
+                    data.setColumnIdentifiers(new Object[]{"Перший стовпчик","Другий стовпчик"});
                     for(int i=0;i<connectionTmp.getNumberOfVariants();i++)
                         data.addRow(new Object[] {connectionTmp.getFirstColumn(i), connectionTmp.getAnswer(i)});
                     jTable1.setModel(data);
@@ -739,6 +739,12 @@ public class MainWindow extends javax.swing.JFrame {
                 
                 is.close();
                 fis.close();
+            }catch(Exception ex){}
+            
+            try
+            {
+                
+                if(qb==null)qb=new questionBank();
                 
                 for(int i=0;i<toSave.getQuestions().size();i++)qb.add(toSave.getQuestions().get(i));
                 
@@ -749,7 +755,13 @@ public class MainWindow extends javax.swing.JFrame {
                 oos.close();
                 fos.close();    
                 
-            }catch(Exception ex){}
+            }catch(Exception ex)
+            {
+                if(ex.getClass()==FileNotFoundException.class)System.out.println("File Bolzhedor!");
+                else if(ex.getClass()==IOException.class)System.out.println("IO Bolzhedor!");
+                else if(ex.getClass()==ClassNotFoundException.class)System.out.println("Class Bolzhedor!");
+                else System.out.println("Unknown Bolzhedor!");
+            }
             
             
         }
