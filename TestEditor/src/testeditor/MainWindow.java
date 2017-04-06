@@ -17,6 +17,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
@@ -217,6 +220,7 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jSpinner2 = new javax.swing.JSpinner();
         jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -322,6 +326,13 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
+        jButton5.setText("jButton5");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
         jMenu1.setText("Файл");
 
         jMenuItem1.setText("Новий");
@@ -384,6 +395,8 @@ public class MainWindow extends javax.swing.JFrame {
                                         .addComponent(jLabel5)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -428,7 +441,8 @@ public class MainWindow extends javax.swing.JFrame {
                     .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton3)
                     .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
+                    .addComponent(jLabel5)
+                    .addComponent(jButton5))
                 .addGap(18, 18, 18)
                 .addComponent(jTextArea1, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -582,7 +596,10 @@ public class MainWindow extends javax.swing.JFrame {
     private void jSpinner1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner1StateChanged
         int num=Integer.parseInt(jSpinner1.getValue().toString());
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        if(num>=jTable1.getRowCount()) model.addRow(new Object[2]);
+        if(num>=jTable1.getRowCount())
+        {
+            while(num>jTable1.getRowCount()) model.addRow(new Object[2]);
+        }
         else model.setRowCount(num);
         
     }//GEN-LAST:event_jSpinner1StateChanged
@@ -818,6 +835,53 @@ public class MainWindow extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jButton4ActionPerformed
 
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        String toInsert=null;
+        JTextArea ta = new JTextArea(20, 60);
+        switch (JOptionPane.showConfirmDialog(null, new JScrollPane(ta))) 
+        {
+            case JOptionPane.OK_OPTION:toInsert=ta.getText();break;
+        }
+        
+        if(toInsert!=null)
+        {
+            String[] lines=toInsert.split("\n");
+            if(lines.length<3) return;
+            jTextArea1.setText(lines[0]);
+            switch (jComboBox1.getSelectedIndex()) 
+            {
+                case 0:
+                    {
+                        int n;
+                        if(lines.length-1<9)n=lines.length;
+                        else n=9;
+                        jSpinner1.setValue(n-1);
+                        for(int i=1;i<n;i++)
+                        {
+                            jTable1.setValueAt(lines[i], i-1, 1);
+                        }       break;
+                    }
+                case 1:
+                    {
+                        int n;
+                        if(lines.length-1<9)n=lines.length;
+                        else n=9;
+                        jSpinner1.setValue(n-1);
+                        String[][] columns=new String[lines.length-1][2];
+                        for(int i=0;i<n-1;i++)
+                        {
+                            columns[i]=lines[i+1].split(":");
+                            jTable1.setValueAt(columns[i][0], i, 0);
+                            jTable1.setValueAt(columns[i][1], i, 1);
+                        }       break;
+                    }
+                case 2:
+                    jTable1.setValueAt(lines[1],0,0);
+                    break;
+            }
+        }
+    }//GEN-LAST:event_jButton5ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -858,6 +922,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
