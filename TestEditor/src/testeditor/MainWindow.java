@@ -55,6 +55,7 @@ public class MainWindow extends javax.swing.JFrame {
         jButton2.setText("◄");
         jButton3.setText("►");
         jButton4.setText("Видалити питання");
+        jButton5.setText("Заповнення");
         jTable1.setRowHeight(40);
         jTable1.getColumnModel().getColumn(0).setMaxWidth(30);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -467,6 +468,10 @@ public class MainWindow extends javax.swing.JFrame {
                 FileInputStream fis = new FileInputStream(filename);
                 ObjectInputStream is = new ObjectInputStream(fis);
                 Test testTmp=(Test)is.readObject();
+                testTimeTemp=testTmp.getTime();
+                testNameTemp=testTmp.getName();
+                testSubjectTemp=testTmp.getSubject();
+                
                 arr=testTmp.getQuestions();
                 jTextField2.setText(testTmp.getSubject());
                 jTextField1.setText(testTmp.getName());
@@ -598,10 +603,12 @@ public class MainWindow extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         if(num>=jTable1.getRowCount())
         {
-            while(num>jTable1.getRowCount()) model.addRow(new Object[2]);
+            if(jComboBox1.getSelectedIndex()==0)
+                while(num>jTable1.getRowCount()) model.addRow(new Object[]{false,""});
+            else
+                while(num>jTable1.getRowCount()) model.addRow(new Object[]{"",""});
         }
-        else model.setRowCount(num);
-        
+        else model.setRowCount(num);        
     }//GEN-LAST:event_jSpinner1StateChanged
 
     //На одне питання вперед
