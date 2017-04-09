@@ -6,6 +6,7 @@
 package testeditor;
 
 import java.awt.Component;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -47,6 +48,8 @@ public class comboTestEditor extends javax.swing.JFrame {
             FileInputStream fis = new FileInputStream("questionBank.qb");
             ObjectInputStream is = new ObjectInputStream(fis);
             qb=(questionBank)is.readObject();
+            is.close();
+            fis.close();
         }catch(Exception ex){System.out.println("Bolzhedor!");}
         
         if(qb!=null)
@@ -70,7 +73,12 @@ public class comboTestEditor extends javax.swing.JFrame {
         }
         else
         {
-            
+            jTable1.setVisible(false);
+            jButton1.setVisible(false);
+            jLabel1.setText("В сховищі питань ще нема жодного питання!");
+            jScrollPane1.setVisible(false);
+            jTextField1.setVisible(false);
+            jSpinner1.setVisible(false);
         }
     }
 
@@ -89,6 +97,9 @@ public class comboTestEditor extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jSpinner1 = new javax.swing.JSpinner();
         jTextField1 = new javax.swing.JTextField();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -131,6 +142,20 @@ public class comboTestEditor extends javax.swing.JFrame {
 
         jSpinner1.setModel(new javax.swing.SpinnerNumberModel(30, 1, null, 1));
 
+        jMenu1.setText("Файл");
+
+        jMenuItem1.setText("Очистити сховище");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
+        jMenuBar1.add(jMenu1);
+
+        setJMenuBar(jMenuBar1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -153,7 +178,7 @@ public class comboTestEditor extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
@@ -213,6 +238,18 @@ public class comboTestEditor extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        try
+        {
+            File file=new File("questionBank.qb");
+            String path = file.getCanonicalPath();
+            File filePath = new File(path);
+            filePath.delete();
+            this.dispose();
+        }catch(Exception ex){}
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -251,6 +288,9 @@ public class comboTestEditor extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JTable jTable1;

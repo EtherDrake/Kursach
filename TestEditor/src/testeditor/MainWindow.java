@@ -37,6 +37,7 @@ public class MainWindow extends javax.swing.JFrame {
      * Creates new form MainWindow
      */
     //Ініціалізація
+    boolean isSafe;
     public MainWindow() {
         initComponents();
         jLabel1.setText("Назва тесту");
@@ -60,7 +61,8 @@ public class MainWindow extends javax.swing.JFrame {
         jTable1.getColumnModel().getColumn(0).setMaxWidth(30);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         prepareModel();
-        changeStance(false); 
+        changeStance(false);
+        isSafe=true;
          
     }
     
@@ -81,6 +83,7 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel4.setEnabled(x);
         jLabel5.setEnabled(x);
         jSpinner1.setEnabled(x);
+        jButton5.setEnabled(x);
 
         jTextField1.setEnabled(!x);
         jTextField2.setEnabled(!x);
@@ -229,6 +232,11 @@ public class MainWindow extends javax.swing.JFrame {
         jMenuItem3 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel1.setText("jLabel1");
 
@@ -456,6 +464,74 @@ public class MainWindow extends javax.swing.JFrame {
 
     //Завантаження з файла
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        if(!isSafe)
+        {
+            switch(JOptionPane.showConfirmDialog(null,"Ви не зберегли зміни. Зберегти?"))
+            {
+                case JOptionPane.OK_OPTION:
+                {
+                    Test toSave=new Test(testSubjectTemp, testNameTemp, testTimeTemp, arr);
+                    JFileChooser chooser=new JFileChooser("/");
+                    FileNameExtensionFilter filter = new FileNameExtensionFilter("Tests", "tst");
+                    chooser.setFileFilter(filter);
+                    int returnVal=chooser.showSaveDialog(null);
+                    if(returnVal == JFileChooser.APPROVE_OPTION)
+                    {//Запис у файл
+                        String filename=chooser.getSelectedFile().getAbsolutePath();
+                        String extentionTmp=filename.substring(filename.length()-3, filename.length());
+                        if(!"tst".equals(extentionTmp))filename+=".tst";
+                        try 
+                        {
+                            FileOutputStream fos;
+                            fos=new FileOutputStream(filename);
+                            ObjectOutputStream oos = new ObjectOutputStream(fos);
+                            oos.writeObject(toSave);
+                            oos.close();
+                            fos.close();
+                        } 
+                        catch (FileNotFoundException e) {}
+                        catch(IOException e){}  
+                    }
+                    
+                    try
+                    {
+                        FileInputStream fis = new FileInputStream("questionBank.qb");
+                        ObjectInputStream is = new ObjectInputStream(fis);
+                        qb=(questionBank)is.readObject();
+
+                        is.close();
+                        fis.close();
+                    }catch(Exception ex){}
+                    try
+                    {
+
+                        if(qb==null)qb=new questionBank();
+
+                        for(int i=0;i<toSave.getQuestions().size();i++)qb.add(toSave.getQuestions().get(i));
+
+                        FileOutputStream fos=new FileOutputStream("questionBank.qb");
+                        ObjectOutputStream oos = new ObjectOutputStream(fos);
+                        oos.writeObject(qb);
+
+                        oos.close();
+                        fos.close();    
+
+                    }catch(Exception ex)
+                    {
+                        if(ex.getClass()==FileNotFoundException.class)System.out.println("File Bolzhedor!");
+                        else if(ex.getClass()==IOException.class)System.out.println("IO Bolzhedor!");
+                        else if(ex.getClass()==ClassNotFoundException.class)System.out.println("Class Bolzhedor!");
+                        else System.out.println("Unknown Bolzhedor!");
+                    }
+                    isSafe=true;
+                    break;
+                    
+                }
+                case JOptionPane.NO_OPTION:isSafe=true;break;
+                default:return;
+            }
+        }
+        
         JFileChooser chooser=new JFileChooser("/");
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Tests", "tst");
         chooser.setFileFilter(filter);
@@ -493,6 +569,7 @@ public class MainWindow extends javax.swing.JFrame {
         testTimeTemp=Integer.parseInt(jSpinner2.getValue().toString());
         changeStance(true);
         questionCount=0;
+        //isSafe=false;
     }//GEN-LAST:event_jButton1ActionPerformed
 
     //Зміна типа питання
@@ -593,6 +670,7 @@ public class MainWindow extends javax.swing.JFrame {
             
             jTextField4.setText(String.valueOf(Integer.parseInt(jTextField4.getText())-1));
             showQuestion(Integer.parseInt(jTextField4.getText())-1);
+            isSafe=false;
             
         }
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -715,8 +793,9 @@ public class MainWindow extends javax.swing.JFrame {
             }
             
             jTextField4.setText(String.valueOf(Integer.parseInt(jTextField4.getText())+1));
-            showQuestion(Integer.parseInt(jTextField4.getText())-1);
+            showQuestion(Integer.parseInt(jTextField4.getText())-1);            
         }
+        isSafe=false;
     }//GEN-LAST:event_jButton3ActionPerformed
 
     
@@ -786,6 +865,7 @@ public class MainWindow extends javax.swing.JFrame {
                 else if(ex.getClass()==ClassNotFoundException.class)System.out.println("Class Bolzhedor!");
                 else System.out.println("Unknown Bolzhedor!");
             }
+            isSafe=true;
             
             
         }
@@ -793,6 +873,74 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
+        if(!isSafe)
+        {
+            switch(JOptionPane.showConfirmDialog(null,"Ви не зберегли зміни. Зберегти?"))
+            {
+                case JOptionPane.OK_OPTION:
+                {
+                    Test toSave=new Test(testSubjectTemp, testNameTemp, testTimeTemp, arr);
+                    JFileChooser chooser=new JFileChooser("/");
+                    FileNameExtensionFilter filter = new FileNameExtensionFilter("Tests", "tst");
+                    chooser.setFileFilter(filter);
+                    int returnVal=chooser.showSaveDialog(null);
+                    if(returnVal == JFileChooser.APPROVE_OPTION)
+                    {//Запис у файл
+                        String filename=chooser.getSelectedFile().getAbsolutePath();
+                        String extentionTmp=filename.substring(filename.length()-3, filename.length());
+                        if(!"tst".equals(extentionTmp))filename+=".tst";
+                        try 
+                        {
+                            FileOutputStream fos;
+                            fos=new FileOutputStream(filename);
+                            ObjectOutputStream oos = new ObjectOutputStream(fos);
+                            oos.writeObject(toSave);
+                            oos.close();
+                            fos.close();
+                        } 
+                        catch (FileNotFoundException e) {}
+                        catch(IOException e){}  
+                    }
+                    
+                    try
+                    {
+                        FileInputStream fis = new FileInputStream("questionBank.qb");
+                        ObjectInputStream is = new ObjectInputStream(fis);
+                        qb=(questionBank)is.readObject();
+
+                        is.close();
+                        fis.close();
+                    }catch(Exception ex){}
+                    try
+                    {
+
+                        if(qb==null)qb=new questionBank();
+
+                        for(int i=0;i<toSave.getQuestions().size();i++)qb.add(toSave.getQuestions().get(i));
+
+                        FileOutputStream fos=new FileOutputStream("questionBank.qb");
+                        ObjectOutputStream oos = new ObjectOutputStream(fos);
+                        oos.writeObject(qb);
+
+                        oos.close();
+                        fos.close();    
+
+                    }catch(Exception ex)
+                    {
+                        if(ex.getClass()==FileNotFoundException.class)System.out.println("File Bolzhedor!");
+                        else if(ex.getClass()==IOException.class)System.out.println("IO Bolzhedor!");
+                        else if(ex.getClass()==ClassNotFoundException.class)System.out.println("Class Bolzhedor!");
+                        else System.out.println("Unknown Bolzhedor!");
+                    }
+                    isSafe=true;
+                    break;
+                }
+                case JOptionPane.NO_OPTION:isSafe=true;break;
+                default:return;
+            }
+        }
+        
+        
         jTable1.getColumnModel().getColumn(0).setMaxWidth(30);
         jLabel5.setEnabled(true);
         jSpinner1.setEnabled(true);
@@ -808,6 +956,9 @@ public class MainWindow extends javax.swing.JFrame {
         jComboBox1.setSelectedIndex(0);
         jTextField4.setText("1");
         changeStance(false);
+        
+        
+        
         
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
@@ -888,6 +1039,77 @@ public class MainWindow extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        if(!isSafe)
+        {
+            switch(JOptionPane.showConfirmDialog(null,"Ви не зберегли зміни. Зберегти?"))
+            {
+                case JOptionPane.OK_OPTION:
+                {
+                    Test toSave=new Test(testSubjectTemp, testNameTemp, testTimeTemp, arr);
+                    JFileChooser chooser=new JFileChooser("/");
+                    FileNameExtensionFilter filter = new FileNameExtensionFilter("Tests", "tst");
+                    chooser.setFileFilter(filter);
+                    int returnVal=chooser.showSaveDialog(null);
+                    if(returnVal == JFileChooser.APPROVE_OPTION)
+                    {//Запис у файл
+                        String filename=chooser.getSelectedFile().getAbsolutePath();
+                        String extentionTmp=filename.substring(filename.length()-3, filename.length());
+                        if(!"tst".equals(extentionTmp))filename+=".tst";
+                        try 
+                        {
+                            FileOutputStream fos;
+                            fos=new FileOutputStream(filename);
+                            ObjectOutputStream oos = new ObjectOutputStream(fos);
+                            oos.writeObject(toSave);
+                            oos.close();
+                            fos.close();
+                        } 
+                        catch (FileNotFoundException e) {}
+                        catch(IOException e){}  
+                    }
+                    
+                    try
+                    {
+                        FileInputStream fis = new FileInputStream("questionBank.qb");
+                        ObjectInputStream is = new ObjectInputStream(fis);
+                        qb=(questionBank)is.readObject();
+
+                        is.close();
+                        fis.close();
+                    }catch(Exception ex){}
+                    try
+                    {
+
+                        if(qb==null)qb=new questionBank();
+
+                        for(int i=0;i<toSave.getQuestions().size();i++)qb.add(toSave.getQuestions().get(i));
+
+                        FileOutputStream fos=new FileOutputStream("questionBank.qb");
+                        ObjectOutputStream oos = new ObjectOutputStream(fos);
+                        oos.writeObject(qb);
+
+                        oos.close();
+                        fos.close();    
+
+                    }catch(Exception ex)
+                    {
+                        if(ex.getClass()==FileNotFoundException.class)System.out.println("File Bolzhedor!");
+                        else if(ex.getClass()==IOException.class)System.out.println("IO Bolzhedor!");
+                        else if(ex.getClass()==ClassNotFoundException.class)System.out.println("Class Bolzhedor!");
+                        else System.out.println("Unknown Bolzhedor!");
+                    }
+                    isSafe=true;
+                    break;
+                }
+                case JOptionPane.NO_OPTION:isSafe=true;break;
+                default:return;
+            }
+        }
+        
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments

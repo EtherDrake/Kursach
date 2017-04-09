@@ -110,6 +110,12 @@ public class questionBank implements Serializable
     }
     
      public ArrayList<Question> getQuestions(){return Questions;}
+     public void Clear(){Questions.clear();}
+     public void Clear(String theme)
+     {
+         for(int i=0;i<Questions.size();i++)
+            if(Questions.get(i).getTheme().equals(theme))Questions.remove(i);
+     }
              
     
 //    public boolean checkContainment(Question q)
