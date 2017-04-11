@@ -60,4 +60,5 @@ public class Test implements Serializable{
     public double getValue(){return value;}
     
     public void setTraining(boolean t){training=t;}
+    public boolean getTraining(){return training;}
 }

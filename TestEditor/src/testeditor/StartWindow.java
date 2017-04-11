@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -162,6 +163,11 @@ public class StartWindow extends javax.swing.JFrame {
         jMenu1.add(jMenuItem1);
 
         jMenuItem3.setText("Про програму");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem3);
 
         jMenuItem2.setText("Закрити");
@@ -290,6 +296,8 @@ public class StartWindow extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         Test toSendTest=new Test(Integer.valueOf(jSpinner1.getValue().toString()),test);
+        if(jCheckBox1.isSelected()) toSendTest.setTraining(true);
+        else toSendTest.setTraining(false);
         server=new Server(toSendTest);
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -306,6 +314,11 @@ public class StartWindow extends javax.swing.JFrame {
         comboTestEditor form=new comboTestEditor();
         form.show();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        // TODO add your handling code here:
+        JOptionPane.showMessageDialog(null, "Програма для визначення кваліфікації програміста\nРозробили:\nEtherDrake\na4tech\nSaNekOKx\nskvore4nikSoft");
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     /**
      * @param args the command line arguments
