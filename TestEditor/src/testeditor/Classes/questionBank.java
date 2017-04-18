@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package testeditor;
+package testeditor.Classes;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -31,13 +31,13 @@ public class questionBank implements Serializable
             {
                 if(Questions.get(i).getText().equals(q.getText()))
                 {
-                    if(Questions.get(i).getClass()==testeditor.commonQuestion.class)
+                    if(Questions.get(i).getClass()==testeditor.Classes.commonQuestion.class)
                     {
                         commonQuestion inArr=(commonQuestion)Questions.get(i);
                         commonQuestion add=(commonQuestion)q;                        
                         if(inArr.getAnswer(0)==add.getAnswer(0)){contained=true;break;}                            
                     }
-                    else if(Questions.get(i).getClass()==testeditor.connectionQuestion.class)
+                    else if(Questions.get(i).getClass()==testeditor.Classes.connectionQuestion.class)
                     {
                         connectionQuestion inArr=(connectionQuestion)Questions.get(i);
                         connectionQuestion add=(connectionQuestion)q;

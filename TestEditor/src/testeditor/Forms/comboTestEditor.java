@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package testeditor;
+package testeditor.Forms;
 
 import java.awt.Component;
 import java.io.File;
@@ -25,6 +25,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import testeditor.Classes.Question;
+import testeditor.Classes.Test;
+import testeditor.Classes.questionBank;
 
 /**
  *
@@ -97,6 +100,7 @@ public class comboTestEditor extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jSpinner1 = new javax.swing.JSpinner();
         jTextField1 = new javax.swing.JTextField();
+        jButton2 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -142,6 +146,13 @@ public class comboTestEditor extends javax.swing.JFrame {
 
         jSpinner1.setModel(new javax.swing.SpinnerNumberModel(30, 1, null, 1));
 
+        jButton2.setText("Видалити теми");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         jMenu1.setText("Файл");
 
         jMenuItem1.setText("Очистити сховище");
@@ -169,7 +180,9 @@ public class comboTestEditor extends javax.swing.JFrame {
                         .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(50, 50, 50)
                         .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 148, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                        .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1))
                     .addComponent(jScrollPane1))
                 .addContainerGap())
@@ -184,7 +197,8 @@ public class comboTestEditor extends javax.swing.JFrame {
                     .addComponent(jButton1)
                     .addComponent(jLabel1)
                     .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2))
                 .addContainerGap())
         );
 
@@ -250,6 +264,64 @@ public class comboTestEditor extends javax.swing.JFrame {
         }catch(Exception ex){}
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        ArrayList<String> themes=new ArrayList<>();
+        for(int i=0;i<jTable1.getRowCount();i++)
+        {
+            if((boolean)jTable1.getValueAt(i, 0)) themes.add((String)jTable1.getValueAt(i, 1));
+        }
+        
+        for(int i=0;i<themes.size();i++)
+        {
+            themes.set(i, themes.get(i).split("\\(")[0]);
+            qb.Clear(themes.get(i));
+            System.out.println(themes.get(i));
+        }
+        
+        try
+        {
+            FileOutputStream fos=new FileOutputStream("questionBank.qb");
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(qb);
+
+            oos.close();
+            fos.close();    
+
+        }catch(Exception ex){}
+        
+        if(qb!=null)
+        {
+            themes=qb.getThemes();
+            DefaultTableModel data = new DefaultTableModel() 
+                {
+                    Class[] types = new Class [] {java.lang.Boolean.class, java.lang.String.class, java.lang.Integer.class};
+
+                     @Override
+                    public Class getColumnClass(int columnIndex) {
+                    return types [columnIndex];
+                    }
+                };
+            data.setColumnCount(3);
+            data.setColumnIdentifiers(new Object[]{"","",""});
+            for(int i=0;i<themes.size();i++)data.addRow(new Object[] {false, themes.get(i)+"("+qb.getNumberOfQuestions(themes.get(i))+")",0});
+            
+            jTable1.setModel(data);
+            jTable1.getColumnModel().getColumn(0).setMaxWidth(30);
+        }
+        else
+        {
+            jTable1.setVisible(false);
+            jButton1.setVisible(false);
+            jLabel1.setText("В сховищі питань ще нема жодного питання!");
+            jScrollPane1.setVisible(false);
+            jTextField1.setVisible(false);
+            jSpinner1.setVisible(false);
+            
+        }
+        
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -287,6 +359,7 @@ public class comboTestEditor extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
