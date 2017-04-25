@@ -21,6 +21,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
@@ -69,6 +70,10 @@ public class MainWindow extends javax.swing.JFrame {
         prepareModel();
         changeStance(false);
         isSafe=true;
+        
+        UIManager.put("OptionPane.yesButtonText","Так");
+        UIManager.put("OptionPane.noButtonText","Ні");
+        UIManager.put("OptionPane.cancelButtonText","Відмінити");
          
     }
     
@@ -1002,7 +1007,7 @@ public class MainWindow extends javax.swing.JFrame {
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         String toInsert=null;
         JTextArea ta = new JTextArea(20, 60);
-        switch (JOptionPane.showConfirmDialog(null, new JScrollPane(ta))) 
+        switch (JOptionPane.showConfirmDialog(null, new JScrollPane(ta),"Введіть питання та варіанти відповіді",1)) 
         {
             case JOptionPane.OK_OPTION:toInsert=ta.getText();break;
         }
@@ -1050,7 +1055,7 @@ public class MainWindow extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(!isSafe)
         {
-            switch(JOptionPane.showConfirmDialog(null,"Ви не зберегли зміни. Зберегти?"))
+            switch(JOptionPane.showConfirmDialog(null,"Ви не зберегли зміни. Зберегти?","",1))
             {
                 case JOptionPane.OK_OPTION:
                 {

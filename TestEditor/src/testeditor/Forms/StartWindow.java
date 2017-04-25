@@ -17,6 +17,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import testeditor.Classes.DebugClient;
 import testeditor.Classes.Server;
@@ -49,6 +50,12 @@ public class StartWindow extends javax.swing.JFrame {
         jLabel2.setEnabled(false);
         jSpinner1.setEnabled(false);
         jLabel6.setVisible(false);
+        UIManager.put("FileChooser.openButtonText","Відкрити");
+        UIManager.put("FileChooser.cancelButtonText","Відмінити");
+        UIManager.put("FileChooser.openDialogTitleText","Виберіть файл");
+        UIManager.put("FileChooser.fileNameLabelText","Назва");
+        UIManager.put("FileChooser.filesOfTypeLabelText","Тип");
+        UIManager.put("FileChooser.lookInLabelText","Папка");
 
         /*
         //questionBank DEBUG
