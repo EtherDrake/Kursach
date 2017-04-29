@@ -265,7 +265,7 @@ public class StartWindow extends javax.swing.JFrame {
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         // TODO add your handling code here:
         MainWindow form=new MainWindow();
-        //form.setVisible(true);
+        form.setTitle("Редактор тестів");
         form.show();
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
@@ -320,14 +320,13 @@ public class StartWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // TODO add your handling code here:
         comboTestEditor form=new comboTestEditor();
+        form.setTitle("Редактор комбінованих тестів");
         form.show();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        // TODO add your handling code here:
-        JOptionPane.showMessageDialog(null, "Програма для визначення кваліфікації програміста\nРозробили:\nEtherDrake\na4tech\nSaNekOKx\nskvore4nikSoft");
+        JOptionPane.showMessageDialog(null, "Програма для визначення кваліфікації програміста\nРозробили:\nEtherDrake\na4tech\nSaNekOKx\nskvore4nikSoft","Про програму", 1);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     /**
@@ -360,7 +359,9 @@ public class StartWindow extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new StartWindow().setVisible(true);
+                StartWindow frm=new StartWindow();
+                frm.setTitle("Сервер");
+                frm.setVisible(true);
             }
         });
     }
