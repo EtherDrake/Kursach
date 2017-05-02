@@ -5,23 +5,37 @@
  */
 package testeditor.Forms;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Box;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import testeditor.Classes.DebugClient;
 import testeditor.Classes.Server;
 import testeditor.Classes.Test;
+import testeditor.Classes.questionBank;
 
 /**
  *
@@ -50,12 +64,16 @@ public class StartWindow extends javax.swing.JFrame {
         jLabel2.setEnabled(false);
         jSpinner1.setEnabled(false);
         jLabel6.setVisible(false);
+        jButton3.setVisible(false);
         UIManager.put("FileChooser.openButtonText","Відкрити");
         UIManager.put("FileChooser.cancelButtonText","Відмінити");
         UIManager.put("FileChooser.openDialogTitleText","Виберіть файл");
         UIManager.put("FileChooser.fileNameLabelText","Назва");
         UIManager.put("FileChooser.filesOfTypeLabelText","Тип");
         UIManager.put("FileChooser.lookInLabelText","Папка");
+        
+        UIManager.put("OptionPane.okButtonText","Увійти");
+        UIManager.put("OptionPane.cancelButtonText","Вийти");
 
         /*
         //questionBank DEBUG
@@ -106,8 +124,17 @@ public class StartWindow extends javax.swing.JFrame {
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem7 = new javax.swing.JMenuItem();
+        jMenuItem6 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setText("Тест");
@@ -189,6 +216,34 @@ public class StartWindow extends javax.swing.JFrame {
         jMenu1.add(jMenuItem2);
 
         jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Користувачі");
+
+        jMenuItem5.setText("Додати користувача");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem5);
+
+        jMenuItem7.setText("Змінити пароль користувача");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem7);
+
+        jMenuItem6.setText("Видалити користувача");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem6);
+
+        jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
 
@@ -326,8 +381,256 @@ public class StartWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        JOptionPane.showMessageDialog(null, "Програма для визначення кваліфікації програміста\nРозробили:\nEtherDrake\na4tech\nSaNekOKx\nskvore4nikSoft","Про програму", 1);
+        JOptionPane.showMessageDialog(null, "Програма для визначення кваліфікації програміста\nРозробили:\nКудрявцев Віктор\nКучмій Олександр\nБіловол Андрій(можливо)\nПР-141","Про програму", 1);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        
+        JTextField loginField = new JTextField(15);
+        JPasswordField passField = new JPasswordField(15);
+        
+
+        JPanel myPanel = new JPanel();
+        JPanel labels = new JPanel(new GridLayout(0,1,2,10));
+        JPanel inputs = new JPanel(new GridLayout(0,1,2,2));
+        
+        labels.add(new JLabel("Логін:",SwingConstants.RIGHT));
+        labels.add(new JLabel("Пароль:",SwingConstants.RIGHT));
+        myPanel.add(labels, BorderLayout.WEST);
+
+        
+        inputs.add(loginField);
+        inputs.add(passField);
+        myPanel.add(inputs,BorderLayout.CENTER);
+        
+        boolean itr=true;
+        Map<String,String> users=new Hashtable<>();
+        try 
+        {
+            FileInputStream fis = new FileInputStream("users");
+            ObjectInputStream is = new ObjectInputStream(fis);
+            users=(Hashtable<String,String>)is.readObject();
+            is.close();
+            fis.close();
+        } 
+        catch (FileNotFoundException e) 
+        {
+            users.put("admin", "xpk2017");
+            try 
+            {
+                FileOutputStream fos;
+                fos=new FileOutputStream("users");
+                ObjectOutputStream oos = new ObjectOutputStream(fos);
+                oos.writeObject(users);
+                oos.close();
+                fos.close();
+            } 
+            catch (FileNotFoundException a) {}
+            catch(IOException a){}  
+        }
+        catch(IOException e){}
+        catch(ClassNotFoundException e){}
+        String login,password;
+                
+        while(itr)
+        {
+            int result = JOptionPane.showConfirmDialog(null, myPanel, 
+               "Вхід", JOptionPane.OK_CANCEL_OPTION);
+            if (result == JOptionPane.OK_OPTION) 
+            {
+                login=loginField.getText();
+                password=passField.getText();
+                if(users.get(login) == null ? password == null : users.get(login).equals(password))
+                    itr=false;
+            }
+            else{System.exit(0);}
+        }        
+    }//GEN-LAST:event_formWindowOpened
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+
+        
+        UIManager.put("OptionPane.okButtonText","Створити");
+        UIManager.put("OptionPane.cancelButtonText","Відмінити");
+        
+        JTextField loginField = new JTextField(15);
+        JPasswordField passField = new JPasswordField(15);
+        JPasswordField confirmField = new JPasswordField(15);  
+        
+        JPanel myPanel = new JPanel();
+        JPanel labels = new JPanel(new GridLayout(0,1,2,11));
+        JPanel inputs = new JPanel(new GridLayout(0,1,2,2));
+        
+        labels.add(new JLabel("Логін:",SwingConstants.RIGHT));
+        labels.add(new JLabel("Пароль:",SwingConstants.RIGHT));
+        labels.add(new JLabel("Підтвердіть пароль:",SwingConstants.RIGHT));
+        myPanel.add(labels, BorderLayout.WEST);
+
+               
+        inputs.add(loginField);
+        inputs.add(passField);
+        inputs.add(confirmField);
+        myPanel.add(inputs,BorderLayout.CENTER);
+
+        
+        Map<String,String> users=new Hashtable<>();
+        try 
+        {
+            FileInputStream fis = new FileInputStream("users");
+            ObjectInputStream is = new ObjectInputStream(fis);
+            users=(Hashtable<String,String>)is.readObject();
+            is.close();
+            fis.close();
+        } 
+        catch (FileNotFoundException e){}
+        catch(IOException e){}
+        catch(ClassNotFoundException e){}
+        
+        int result = JOptionPane.showConfirmDialog(null, myPanel, 
+           "Створити нового користувача", JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION) 
+        {
+            if(passField.getText() == null ? confirmField.getText() == null : passField.getText().equals(confirmField.getText()))
+            {
+                users.put(loginField.getText(), passField.getText());
+                try 
+                {
+                    FileOutputStream fos;
+                    fos=new FileOutputStream("users");
+                    ObjectOutputStream oos = new ObjectOutputStream(fos);
+                    oos.writeObject(users);
+                    oos.close();
+                    fos.close();
+                } 
+                catch (FileNotFoundException a) {}
+                catch(IOException a){}
+            }
+            else JOptionPane.showMessageDialog(null, "Паролі не співпадають!");
+        }
+        
+        
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+        UIManager.put("OptionPane.okButtonText","Змінити");
+        UIManager.put("OptionPane.cancelButtonText","Відмінити");
+        
+        JTextField loginField = new JTextField(15);
+        JPasswordField oldPassField = new JPasswordField(15);
+        JPasswordField newPassField = new JPasswordField(15);
+        
+        JPanel myPanel = new JPanel();
+        JPanel labels = new JPanel(new GridLayout(0,1,2,11));
+        JPanel inputs = new JPanel(new GridLayout(0,1,2,2));
+        
+        labels.add(new JLabel("Логін:",SwingConstants.RIGHT));
+        labels.add(new JLabel("Старий пароль:",SwingConstants.RIGHT));
+        labels.add(new JLabel("Новий пароль:",SwingConstants.RIGHT));
+        myPanel.add(labels, BorderLayout.WEST);
+
+                
+        inputs.add(loginField);
+        inputs.add(oldPassField);
+        inputs.add(newPassField);
+        myPanel.add(inputs,BorderLayout.CENTER);
+       
+        Map<String,String> users=new Hashtable<>();
+        try 
+        {
+            FileInputStream fis = new FileInputStream("users");
+            ObjectInputStream is = new ObjectInputStream(fis);
+            users=(Hashtable<String,String>)is.readObject();
+            is.close();
+            fis.close();
+        } 
+        catch (FileNotFoundException e){}
+        catch(IOException e){}
+        catch(ClassNotFoundException e){}
+        
+        int result = JOptionPane.showConfirmDialog(null, myPanel, 
+           "Введіть логін та пароль", JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION) 
+        {
+            if(oldPassField.getText() == null ? users.get(loginField.getText()) == null : oldPassField.getText().equals(users.get(loginField.getText())))
+            {
+                users.replace(loginField.getText(), newPassField.getText());
+                try 
+                {
+                    FileOutputStream fos;
+                    fos=new FileOutputStream("users");
+                    ObjectOutputStream oos = new ObjectOutputStream(fos);
+                    oos.writeObject(users);
+                    oos.close();
+                    fos.close();
+                } 
+                catch (FileNotFoundException a) {}
+                catch(IOException a){}
+            }
+            else JOptionPane.showMessageDialog(null, "Невірні дані користувача!");
+        }                
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        UIManager.put("OptionPane.okButtonText","Видалити");
+        UIManager.put("OptionPane.cancelButtonText","Відмінити");
+        
+        JTextField loginField = new JTextField(15);
+        JPasswordField passField = new JPasswordField(15);
+        JPanel myPanel = new JPanel();
+        
+        JPanel labels = new JPanel(new GridLayout(0,1,2,10));
+        JPanel inputs = new JPanel(new GridLayout(0,1,2,2));
+        
+        labels.add(new JLabel("Логін:",SwingConstants.RIGHT));
+        labels.add(new JLabel("Пароль:",SwingConstants.RIGHT));
+        myPanel.add(labels, BorderLayout.WEST);
+
+        
+        inputs.add(loginField);
+        inputs.add(passField);
+        myPanel.add(inputs,BorderLayout.CENTER);
+        
+        
+        Map<String,String> users=new Hashtable<>();
+        try 
+        {
+            FileInputStream fis = new FileInputStream("users");
+            ObjectInputStream is = new ObjectInputStream(fis);
+            users=(Hashtable<String,String>)is.readObject();
+            is.close();
+            fis.close();
+        } 
+        catch (FileNotFoundException e){}
+        catch(IOException e){}
+        catch(ClassNotFoundException e){}
+        
+        int result = JOptionPane.showConfirmDialog(null, myPanel, 
+           "Введіть логін та пароль", JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION) 
+        {
+            if("admin".equals(loginField.getText()))
+            {
+                JOptionPane.showMessageDialog(null, "Відмовлено");
+                return;
+            }
+            if(passField.getText() == null ? users.get(loginField.getText()) == null : passField.getText().equals(users.get(loginField.getText())))
+            {
+                users.remove(loginField.getText());
+                try 
+                {
+                    FileOutputStream fos;
+                    fos=new FileOutputStream("users");
+                    ObjectOutputStream oos = new ObjectOutputStream(fos);
+                    oos.writeObject(users);
+                    oos.close();
+                    fos.close();
+                } 
+                catch (FileNotFoundException a) {}
+                catch(IOException a){}
+            }
+            else JOptionPane.showMessageDialog(null, "Невірні дані користувача!");
+        }
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -379,11 +682,15 @@ public class StartWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
