@@ -48,6 +48,8 @@ public class StartWindow extends javax.swing.JFrame {
      */
     Test test;
     Server server;
+    boolean adminRights;
+    String currentUser;
     public StartWindow() {
         initComponents();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -74,6 +76,7 @@ public class StartWindow extends javax.swing.JFrame {
         
         UIManager.put("OptionPane.okButtonText","Увійти");
         UIManager.put("OptionPane.cancelButtonText","Вийти");
+        adminRights=false;
 
         /*
         //questionBank DEBUG
@@ -128,6 +131,7 @@ public class StartWindow extends javax.swing.JFrame {
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem7 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
+        jMenuItem8 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -242,6 +246,14 @@ public class StartWindow extends javax.swing.JFrame {
             }
         });
         jMenu2.add(jMenuItem6);
+
+        jMenuItem8.setText("Змінити користувача");
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem8ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem8);
 
         jMenuBar1.add(jMenu2);
 
@@ -441,7 +453,11 @@ public class StartWindow extends javax.swing.JFrame {
                 login=loginField.getText();
                 password=passField.getText();
                 if(users.get(login) == null ? password == null : users.get(login).equals(password))
+                {
                     itr=false;
+                    currentUser=login;
+                    if("admin".equals(login)) adminRights=true;
+                }
             }
             else{System.exit(0);}
         }        
@@ -492,18 +508,27 @@ public class StartWindow extends javax.swing.JFrame {
         {
             if(passField.getText() == null ? confirmField.getText() == null : passField.getText().equals(confirmField.getText()))
             {
-                users.put(loginField.getText(), passField.getText());
-                try 
+                if(adminRights)
                 {
-                    FileOutputStream fos;
-                    fos=new FileOutputStream("users");
-                    ObjectOutputStream oos = new ObjectOutputStream(fos);
-                    oos.writeObject(users);
-                    oos.close();
-                    fos.close();
-                } 
-                catch (FileNotFoundException a) {}
-                catch(IOException a){}
+                    users.put(loginField.getText(), passField.getText());
+                    try 
+                    {
+                        FileOutputStream fos;
+                        fos=new FileOutputStream("users");
+                        ObjectOutputStream oos = new ObjectOutputStream(fos);
+                        oos.writeObject(users);
+                        oos.close();
+                        fos.close();
+                    } 
+                    catch (FileNotFoundException a) {}
+                    catch(IOException a){}
+                }
+                else
+                {
+                    UIManager.put("OptionPane.okButtonText","OK");
+                    JOptionPane.showMessageDialog(null, "Відмовлено");
+                    return;
+                }
             }
             else JOptionPane.showMessageDialog(null, "Паролі не співпадають!");
         }
@@ -551,20 +576,29 @@ public class StartWindow extends javax.swing.JFrame {
            "Введіть логін та пароль", JOptionPane.OK_CANCEL_OPTION);
         if (result == JOptionPane.OK_OPTION) 
         {
-            if(oldPassField.getText() == null ? users.get(loginField.getText()) == null : oldPassField.getText().equals(users.get(loginField.getText())))
+            if(oldPassField.getText() == null ? users.get(loginField.getText()) == null : oldPassField.getText().equals(users.get(loginField.getText())) || adminRights)
             {
-                users.replace(loginField.getText(), newPassField.getText());
-                try 
+                if((loginField.getText() == null ? currentUser == null : loginField.getText().equals(currentUser)) || adminRights)
                 {
-                    FileOutputStream fos;
-                    fos=new FileOutputStream("users");
-                    ObjectOutputStream oos = new ObjectOutputStream(fos);
-                    oos.writeObject(users);
-                    oos.close();
-                    fos.close();
-                } 
-                catch (FileNotFoundException a) {}
-                catch(IOException a){}
+                    users.replace(loginField.getText(), newPassField.getText());
+                    try 
+                    {
+                        FileOutputStream fos;
+                        fos=new FileOutputStream("users");
+                        ObjectOutputStream oos = new ObjectOutputStream(fos);
+                        oos.writeObject(users);
+                        oos.close();
+                        fos.close();
+                    } 
+                    catch (FileNotFoundException a) {}
+                    catch(IOException a){}                
+                }
+                else
+                {
+                    UIManager.put("OptionPane.okButtonText","OK");
+                    JOptionPane.showMessageDialog(null, "Відмовлено");
+                    return;
+                }
             }
             else JOptionPane.showMessageDialog(null, "Невірні дані користувача!");
         }                
@@ -608,8 +642,9 @@ public class StartWindow extends javax.swing.JFrame {
            "Введіть логін та пароль", JOptionPane.OK_CANCEL_OPTION);
         if (result == JOptionPane.OK_OPTION) 
         {
-            if("admin".equals(loginField.getText()))
+            if("admin".equals(loginField.getText()) || (!loginField.getText().equals(currentUser) && !adminRights))
             {
+                UIManager.put("OptionPane.okButtonText","OK");
                 JOptionPane.showMessageDialog(null, "Відмовлено");
                 return;
             }
@@ -627,10 +662,71 @@ public class StartWindow extends javax.swing.JFrame {
                 } 
                 catch (FileNotFoundException a) {}
                 catch(IOException a){}
+                if(loginField.getText().equals(currentUser)) System.exit(0);
             }
             else JOptionPane.showMessageDialog(null, "Невірні дані користувача!");
         }
     }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+        UIManager.put("OptionPane.okButtonText","Увійти");
+        UIManager.put("OptionPane.cancelButtonText","Відмінити");
+        JTextField loginField = new JTextField(15);
+        JPasswordField passField = new JPasswordField(15);
+        
+
+        JPanel myPanel = new JPanel();
+        JPanel labels = new JPanel(new GridLayout(0,1,2,10));
+        JPanel inputs = new JPanel(new GridLayout(0,1,2,2));
+        
+        labels.add(new JLabel("Логін:",SwingConstants.RIGHT));
+        labels.add(new JLabel("Пароль:",SwingConstants.RIGHT));
+        myPanel.add(labels, BorderLayout.WEST);
+
+        
+        inputs.add(loginField);
+        inputs.add(passField);
+        myPanel.add(inputs,BorderLayout.CENTER);
+        
+        boolean itr=true;
+        Map<String,String> users=new Hashtable<>();
+        try 
+        {
+            FileInputStream fis = new FileInputStream("users");
+            ObjectInputStream is = new ObjectInputStream(fis);
+            users=(Hashtable<String,String>)is.readObject();
+            is.close();
+            fis.close();
+        } 
+        catch (FileNotFoundException e){}
+        catch(IOException e){}
+        catch(ClassNotFoundException e){}
+        
+        String login,password;
+                
+        while(itr)
+        {
+            int result = JOptionPane.showConfirmDialog(null, myPanel, 
+               "Вхід", JOptionPane.OK_CANCEL_OPTION);
+            if (result == JOptionPane.OK_OPTION) 
+            {
+                login=loginField.getText();
+                password=passField.getText();
+                if(users.get(login) == null ? password == null : users.get(login).equals(password))
+                {
+                    itr=false;
+                    currentUser=login;
+                    if("admin".equals(login)) adminRights=true;
+                    else adminRights=false;
+                }
+            }
+            else
+            {
+                if("admin".equals(currentUser)) adminRights=true;
+                break;
+            }
+        }
+    }//GEN-LAST:event_jMenuItem8ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -691,6 +787,7 @@ public class StartWindow extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
