@@ -52,6 +52,7 @@ public class StartWindow extends javax.swing.JFrame {
     String currentUser;
     public StartWindow() {
         initComponents();
+        jButton3.setVisible(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jTextField1.setText("");
         jCheckBox1.setText("Навчальний тест");
